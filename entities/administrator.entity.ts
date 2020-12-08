@@ -6,19 +6,17 @@ export class Administrator {
   @PrimaryGeneratedColumn({
     type: "int",
     name: "administrator_id",
-    unsigned: true,
+    unsigned: true
   })
   administratorId: number;
 
-  @Column({
-    type: "varchar",
+  @Column("varchar", {
     unique: true,
     length: 32
   })
   username: string;
 
-  @Column({
-    type: "varchar",
+  @Column("varchar", {
     name: "password_hash",
     length: 128
   })
