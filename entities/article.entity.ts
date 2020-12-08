@@ -7,10 +7,10 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Category } from "./Category";
+import { Category } from "./category.entity";
 import { ArticleFeature } from "./article-feature.entity";
 import { ArticlePrice } from "./article-price.entity";
-import { CartArticle } from "./CartArticle";
+import { CartArticle } from "./cart-article.entity";
 import { Phote } from "./phote.entity";
 
 @Index("fk_article_category_id", ["categoryId"], {})
