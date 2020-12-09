@@ -1,4 +1,3 @@
-import { ArticleService } from "src/services/article/article.service";
 import {
   Column,
   Entity,
@@ -36,7 +35,7 @@ export class Feature {
     joinColumn: { name: "feature_id", referencedColumnName: "featureId" },
     inverseJoinColumn: { name: "article_id", referencedColumnName: "articleId"}
   })
-  features: Article[];
+  articles: Article[];
 
   @ManyToOne(() => Category, (category) => category.features, {
     onDelete: "NO ACTION",
