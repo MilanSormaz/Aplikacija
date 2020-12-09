@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Article } from "./article.entity";
-import { Cart } from "./Cart.entity";
+import { Cart } from "./cart.entity";
 
 @Index("uq_cart_article_cart_id_article_id", ["cartId", "articleId"], {
   unique: true,

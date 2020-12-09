@@ -9,12 +9,17 @@ import { ArticleFeature } from 'entities/article-feature.entity';
 import { ArticlePrice } from 'entities/article-price.entity';
 import { Article } from 'entities/article.entity';
 import { CartArticle } from 'entities/cart-article.entity';
-import { Cart } from 'entities/Cart.entity';
+import { Cart } from 'entities/cart.entity';
 import { Category } from 'entities/category.entity';
 import { Feature } from 'entities/feature.entity';
 import { Order } from 'entities/order.entity';
 import { Phote } from 'entities/phote.entity';
 import { User } from 'entities/user.entity';
+import { CategoryController } from './controllers/api/category.controller';
+import { CategoryService } from './services/category/category.service';
+import { ArticleService } from './services/article/article.service';
+import { ArticleController } from './controllers/api/article.controller';
+
 
 
 
@@ -42,14 +47,25 @@ import { User } from 'entities/user.entity';
       ]
 
     }),
-    TypeOrmModule.forFeature([Administrator])
+    TypeOrmModule.forFeature([      
+      Administrator,
+      Category,
+      Article,
+    ])
 
   ],
   controllers: [
     AppController,
-    AdministratorController
+    AdministratorController,
+    CategoryController,
+    ArticleController,
+    
   ],
-  providers: [AdministratorService]
+  providers: [
+    AdministratorService,
+    CategoryService,
+    ArticleService,
+  ]
 
 })
 export class AppModule {}
