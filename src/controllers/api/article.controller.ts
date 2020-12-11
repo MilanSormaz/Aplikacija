@@ -1,16 +1,17 @@
 import {Body, Controller, Post, Param, UseInterceptors, UploadedFile, Req} from "@nestjs/common";
 import {Crud} from "@nestjsx/crud";
-import { Article } from "entities/article.entity";
+import { Article } from "src/entities/article.entity";
 import { AddArticleDto } from "src/dtos/article/add.article.dto";
 import { ArticleService } from "src/services/article/article.service";
 import { StorageConfig } from "config/storage.config";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { PhotoService } from "src/services/photo/photo.service";
 import { diskStorage } from "multer";
-import { Phote } from "entities/phote.entity";
+import { Phote } from "src/entities/phote.entity";
 import { ApiResponse } from "src/misc/api.response.class";
-
-
+import * as fileType from 'file-type';
+import * as fs from 'fs';
+import * as sharp from 'sharp';
 
 
 @Controller('api/article')
@@ -60,7 +61,7 @@ export class ArticleController {
     @UseInterceptors(
         FileInterceptor('photo', { 
             storage: diskStorage({
-                destination: StorageConfig.photoDestination,
+                destination: StorageConfig.photo.destination,
                 filename: (req, file, callback) => {
                     let original: string = file.originalname;
 
@@ -100,7 +101,7 @@ export class ArticleController {
             },
             limits: {
                 files: 1,
-                fileSize: StorageConfig.photoMaxFileSize        
+                fileSize: StorageConfig.photo.maxSize        
             },
         })
     )
@@ -118,6 +119,21 @@ export class ArticleController {
             return new ApiResponse('error', -4002, 'Photo not uploaded');
         }
 
+        const fileTypeResult = await fileType.fromFile(photo.path);
+        if (!fileTypeResult) {
+            fs.unlinkSync(photo.path);
+            return new ApiResponse('error', -4002, 'Cannot detect file type!');
+        }
+
+        const realMimeType = fileTypeResult.mime;
+        if (!(realMimeType.includes('jpeg') || realMimeType.includes('png'))) {
+            fs.unlinkSync(photo.path);
+            return new ApiResponse('error', -4002, 'Bad file content type!');
+        }
+
+        await this.createResizedImage(photo, StorageConfig.photo.resize.thumb);
+        await this.createResizedImage(photo, StorageConfig.photo.resize.small);
+
         const newPhoto: Phote = new Phote();
         newPhoto.articleId = articleId;
         newPhoto.imagePath = photo.filename;
@@ -129,5 +145,27 @@ export class ArticleController {
         }
     
         return savedPhoto;
+    }
+
+
+
+async createResizedImage(photo, resizeSettings) {
+
+          const originalFilePath = photo.path;
+        const fileName = photo.filename;
+    
+        const destinationFilePath = StorageConfig.photo.destination + 
+        StorageConfig.photo.resize.small.directory + 
+        fileName;
+    
+        await sharp(originalFilePath)
+        .resize({
+            fir: 'cover',
+            width: resizeSettings.small.width,
+            height: resizeSettings.small.height,
+    
+        })
+        .toFile(destinationFilePath);
+
     }
 }
