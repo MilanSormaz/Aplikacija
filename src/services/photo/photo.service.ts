@@ -12,4 +12,8 @@ export class PhotoService extends TypeOrmCrudService<Phote> {
     add(newPhoto: Phote): Promise<Phote> {
         return this.photo.save(newPhoto);
     }
+
+    async deleteById(id: number) {
+        return await this.photo.delete(id);
+    }
 }
