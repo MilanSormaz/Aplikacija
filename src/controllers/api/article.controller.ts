@@ -86,11 +86,13 @@ export class ArticleController {
             }),
             fileFilter: (req, file, callback) => {
                 if (file.originalname.toLowerCase().match(/\.(jpg|png)$/)) {
-                    callback(new Error('Bad file extensions!'), false);
+                    req.fileFilterError = 'Bad file extension';
+                    callback(null, false);
                     return;
                 }
                 if (!(file.mimetype.includes('jpeg') || file.mimetype.includes('png'))){
-                    callback(new Error('Bad file content!'), false);
+                    req.fileFilterError = 'Bad file extension';
+                    callback(null, false);
                     return;
                 }
 
@@ -102,13 +104,27 @@ export class ArticleController {
             },
         })
     )
-    async uploadPhoto(@Param('id') articleId: number, @UploadedFile() photo): Promise<ApiResponse | Phote> {
+    async uploadPhoto(
+        @Param('id') articleId: number, 
+        @UploadedFile() photo,
+        @Req() req
+    ): Promise<ApiResponse | Phote> {
+        
+        if (req.fileFilterError) {
+            return new ApiResponse('error', -4002, req.fileFilterError);
+        }
+
+        if (!photo) {
+            return new ApiResponse('error', -4002, 'Photo not uploaded');
+        }
+
         const newPhoto: Phote = new Phote();
         newPhoto.articleId = articleId;
         newPhoto.imagePath = photo.filename;
 
         const savedPhoto = await this.photoService.add(newPhoto);
         if (!savedPhoto) {
+
             return new ApiResponse('error', -4001);
         }
     
