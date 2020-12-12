@@ -11,6 +11,6 @@ export class CategoryService extends TypeOrmCrudService<Category> {
         @InjectRepository(Category)
         private readonly category: Repository<Category>
     ){
-        super(category)
+        super(category);
     }
 } 

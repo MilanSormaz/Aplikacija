@@ -11,6 +11,6 @@ export class FeatureService extends TypeOrmCrudService<Feature> {
         @InjectRepository(Feature)
         private readonly feature: Repository<Feature>
     ){
-        super(feature)
+        super(feature);
     }
 } 

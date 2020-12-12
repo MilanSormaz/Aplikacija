@@ -22,8 +22,10 @@ import { ArticleController } from './controllers/api/article.controller';
 import { AuthController } from './controllers/api/auth.controller';
 import { AuthMiddleware } from './middlewares/auth.middleware';
 import { PhotoService } from './services/photo/photo.service';
+import { UserService } from './services/user/user.service';
 import { FeatureService } from './services/feature/feature.service';
 import { FeatureController } from './controllers/api/feature.controller';
+
 
 
 
@@ -74,6 +76,7 @@ import { FeatureController } from './controllers/api/feature.controller';
     ArticleController,
     AuthController,
     FeatureController,
+
     
     
   ],
@@ -84,6 +87,7 @@ import { FeatureController } from './controllers/api/feature.controller';
     PhotoService,
     FeatureService,
     ArticleService,
+    UserService,
   ],
   
   exports: [

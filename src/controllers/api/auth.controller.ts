@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req } from "@nestjs/common";
+import { Body, Controller, Post, Put, Req } from "@nestjs/common";
 import { LoginAdministratorDto } from "src/dtos/administrator/login.administrator.dto";
 import { ApiResponse } from "src/misc/api.response.class";
 import { AdministratorService } from "src/services/administrator/administrator.service";
@@ -8,12 +8,17 @@ import { JwtDataAdministratorDto } from "src/dtos/administrator/jwt.data.adminis
 import { Request } from "express";
 import { LoginInfoAdministratorDto } from "src/dtos/administrator/login.info.administrator.dto";
 import { jwtSecret } from "config/jwt.secret";
+import { UserRegistrationDto } from "src/dtos/user/user.registration.dto";
+import { UserService } from "src/services/user/user.service";
 
 
 
 @Controller('auth')
 export class AuthController {
-    constructor(public administratorService: AdministratorService) { }
+    constructor(
+        public administratorService: AdministratorService,
+        public userService: UserService,
+        ) { }
 
         @Post('login')
         async doLogin(@Body() data: LoginAdministratorDto, @Req() req: Request): Promise<LoginInfoAdministratorDto | ApiResponse> {
@@ -55,5 +60,11 @@ export class AuthController {
 
         }
 
-       
+        @Put('user/register')
+        async UserRegister(@Body() data: UserRegistrationDto) {
+            return await this.userService.register(data);
+        }
+
+
+
     }
