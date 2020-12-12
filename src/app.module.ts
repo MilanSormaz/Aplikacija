@@ -83,11 +83,15 @@ import { FeatureController } from './controllers/api/feature.controller';
     ArticleService,
     PhotoService,
     FeatureService,
+    ArticleService,
   ],
   
   exports: [
     AdministratorService,
     PhotoService,
+    ArticleService,
+    FeatureService,
+    CategoryService,
   ]
 
 })
