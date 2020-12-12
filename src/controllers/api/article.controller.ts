@@ -1,4 +1,4 @@
-import {Body, Controller, Post, Param, UseInterceptors, UploadedFile, Req, Delete, Patch} from "@nestjs/common";
+import {Body, Controller, Post, Param, UseInterceptors, UploadedFile, Req, Delete, Patch, UseGuards} from "@nestjs/common";
 import {Crud} from "@nestjsx/crud";
 import { Article } from "src/entities/article.entity";
 import { AddArticleDto } from "src/dtos/article/add.article.dto";
@@ -13,6 +13,8 @@ import * as fileType from 'file-type';
 import * as fs from 'fs';
 import * as sharp from 'sharp';
 import { EditArticleDto } from "src/dtos/article/edit.article.dto";
+import { RoleCheckedGuard } from "src/misc/role.checker.guard";
+import { AllowToRoles } from "src/misc/allow.to.rolles.descriptor";
 
 
 @Controller('api/article')
@@ -58,16 +60,22 @@ export class ArticleController {
         public photoService: PhotoService,
     ){}
 
+    @UseGuards(RoleCheckedGuard)
+    @AllowToRoles('administrator')
     @Post('createFull')
     createFullArticle(@Body() data: AddArticleDto) {
         return this.service.createFullArticle(data);
     }
 
+    @UseGuards(RoleCheckedGuard)
+    @AllowToRoles('administrator')
     @Patch(':id')
     editFullArticle(@Param('id') id: number, @Body() data: EditArticleDto) {
         return this.service.editFullArticle(id, data);
     }
 
+    @UseGuards(RoleCheckedGuard)
+    @AllowToRoles('administrator')
     @Post(':id/uploadPhoto/')
     @UseInterceptors(
         FileInterceptor('photo', { 
@@ -180,6 +188,8 @@ async createResizedImage(photo, resizeSettings) {
 
     }
 
+    @UseGuards(RoleCheckedGuard)
+    @AllowToRoles('administrator')
     @Delete(':articleId/deletePhoto/:photoId')
     public async deletePhoto(
         @Param('articleId') articleId: number,
