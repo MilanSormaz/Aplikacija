@@ -92,10 +92,7 @@ import { FeatureController } from './controllers/api/feature.controller';
   
   exports: [
     AdministratorService,
-    PhotoService,
-    ArticleService,
-    FeatureService,
-    CategoryService,
+    UserService,
   ]
 
 })
